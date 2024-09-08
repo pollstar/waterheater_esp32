@@ -1,12 +1,21 @@
 #include "esp32-hal-gpio.h"
 #include "button.h"
+#include "main.h"
 
+#if !defined(BUTTON_TASK_PRIORITY)
 #define BUTTON_TICK_PERIOD 10
-#define BUTTON_TASK_STACK_SIZE 2048
-#define BUTTON_TASK_PRIORITY   5
+#endif
 
-Button::Button(uint8_t pin): pin_(pin) {
-	pinMode(pin_, INPUT);
+#if !defined(BUTTON_TASK_PRIORITY)
+#define BUTTON_TASK_STACK_SIZE 2048
+#endif
+
+#if !defined(BUTTON_TASK_PRIORITY)
+#define BUTTON_TASK_PRIORITY   5
+#endif
+
+Button::Button(uint8_t pin): m_pin(pin) {
+	pinMode(this->m_pin, INPUT);
 }
 
 Button::~Button() {
@@ -46,9 +55,9 @@ void Button::taskHandler(void *pvParameters) {
   while(1) {
     std::lock_guard<std::mutex> lock(m_mutex);
     for (auto btn: m_buttonList) {
-      int tmp_state = digitalRead(btn->pin_);
+      int tmp_state = digitalRead(btn->m_pin);
 
-      if (btn->currentState_ != tmp_state) {
+      if (btn->m_currentState != tmp_state) {
         if(!btn->timePressDuration_) {
           btn->timePressDuration_ = CONFIG_BUTTON_DEBOUNCE_TIME_MS;
         } else {
@@ -56,20 +65,20 @@ void Button::taskHandler(void *pvParameters) {
         }
 
         if (btn->timePressDuration_ <= 0) {
-          btn->currentState_ = tmp_state;
+          btn->m_currentState = tmp_state;
           btn->timePressDuration_ = 0;
 
-          if (btn->currentState_ == LOW && btn->onPressedCallback_) {
-            btn->onPressedCallback_();
+          if (btn->m_currentState == LOW && btn->onPressedCallback) {
+            btn->onPressedCallback();
             btn->timeLongPressDuration = CONFIG_BUTTON_LONG_PRESS_MS;
           } 
-          else if (btn->currentState_ == HIGH) {
-            if (btn->onReleasedCallback_) {
-              btn->onReleasedCallback_();
+          else if (btn->m_currentState == HIGH) {
+            if (btn->onReleasedCallback) {
+              btn->onReleasedCallback();
             }
 
-            if (btn->onTouchCallback_) {
-              btn->onTouchCallback_();
+            if (btn->onTouchCallback) {
+              btn->onTouchCallback();
             }
 
             // if (timeLongPressDuration <= 0 && onLongTouchCallback_) {
@@ -81,7 +90,7 @@ void Button::taskHandler(void *pvParameters) {
       }
     }
 
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(BUTTON_TICK_PERIOD));
   }
 
   vTaskDelete(nullptr);

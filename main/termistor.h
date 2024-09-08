@@ -11,3 +11,6 @@ public:
 private:
   uint8_t m_pin;
 };
+
+extern Termistor t1;
+extern Termistor t2;

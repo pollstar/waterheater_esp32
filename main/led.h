@@ -2,16 +2,7 @@
 #include <Arduino.h>
 #include <list>
 
-#define LED_LOCK    13
-#define LED_COLD    15
-#define LED_ECO     2
-#define LED_COMFORT 17
-#define LED_HEAT    22
-
 #define LED_DEFAULT_PERIOD 500
-
-#define LED_TASK_STACK_SIZE 640
-#define LED_TASK_PRIORITY   5
 
 class Led {
   public:

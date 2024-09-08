@@ -1,7 +1,18 @@
 #include <list>
+#include "main.h"
 #include "led.h"
 
-#define LED_TICK_PERIOD 10
+#if !defined(LED_TASK_PRIORITY)
+#define LED_TASK_PRIORITY         5
+#endif
+
+#if !defined(LED_TICK_PERIOD)
+#define LED_TICK_PERIOD           10
+#endif
+
+#if !defined(LED_TASK_STACK_SIZE)
+#define LED_TASK_STACK_SIZE       1024
+#endif
 
 Led::Led(uint8_t pin): _pin(pin) {
   pinMode(this->_pin, OUTPUT);
@@ -35,7 +46,8 @@ void Led::blink(){
   }
 
   if (Led::m_taskHandle == nullptr) {
-    xTaskCreate(Led::taskHandler, "", 1024, nullptr, 5, &Led::m_taskHandle);
+    xTaskCreate(Led::taskHandler, "Led_task", LED_TASK_STACK_SIZE,
+      nullptr, LED_TASK_PRIORITY, &Led::m_taskHandle);
 
   } else {
     vTaskResume(Led::m_taskHandle);
@@ -86,7 +98,7 @@ void Led::taskHandler(void *pvParameters) {
         digitalWrite(led->_pin, led->_state);
       }
     }
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(LED_TICK_PERIOD));
   };
 
   vTaskDelete(nullptr);
@@ -101,3 +113,4 @@ void Led::resetPeriod() {
 TaskHandle_t      Led::m_taskHandle = nullptr;
 std::list<Led *>  Led::listBlinkPin;
 uint32_t          Led::tickMS = 0;
+

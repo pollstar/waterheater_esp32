@@ -49,9 +49,9 @@ class Parameters {
 
     Screen* screen() const;
     Screen* screen(Screen* screen);
-  
-    TFT_eSprite* face() const;
-    TFT_eSprite* face(TFT_eSprite *face);
+    
+    TFT_eSPI* tft() const;
+    TFT_eSPI* tft(TFT_eSPI *tft);
 
     Mode* mode() const;
     Mode* mode(Mode *mode);
@@ -75,8 +75,7 @@ class Parameters {
 
     Mode* m_currentMode;
 
-    Screen *m_currentScreen = nullptr;
-    TFT_eSprite *m_face{nullptr};
-
+    Screen *m_currentScreen{nullptr};
+    TFT_eSPI *m_tft{nullptr};  
 };
 

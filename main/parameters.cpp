@@ -1,7 +1,7 @@
 #include "parameters.h"
 #include <EEPROM.h>
 
-std::array<Mode*, INDEX_MODE_MAX> modes = {new ModeCold(), new ModeEco(), new ModeNormal()};
+std::array<Mode*, INDEX_MODE_MAX> modes = {&modeCold, &modeEco, &modeNormal};
 //Parameters Parameters::m_instance;
 
 Parameters::Parameters() {
@@ -48,14 +48,14 @@ Screen* Parameters::screen(Screen* screen) {
   m_currentScreen = screen;
   return m_currentScreen;
 };
-  
-TFT_eSprite* Parameters::face() const {
-  return m_face;
+
+TFT_eSPI* Parameters::tft() const {
+  return m_tft;
 };
 
-TFT_eSprite* Parameters::face(TFT_eSprite *face) {
-  m_face = face;
-  return m_face;
+TFT_eSPI* Parameters::tft(TFT_eSPI *tft) {
+  m_tft = tft;
+  return m_tft;
 };
 
 Mode* Parameters::mode() const {
