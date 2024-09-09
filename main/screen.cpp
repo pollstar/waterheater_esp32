@@ -2,51 +2,84 @@
 #include "parameters.h"
 #include "controller.h"
 
-void ScreenMain::draw(TFT_eSprite *face) 
+bool Screen::checkFace()
 {
-  char buff[30];
-  
-  face->fillSprite(TFT_GREEN);
-  face->setCursor(3, 3, 2);
-    
-  face->setTextColor(TFT_WHITE,TFT_BLUE); 
+  if (this->m_face == nullptr) {
+    this->m_face = Parameters::get()->face();
+  }
 
-  snprintf(buff, 30, " t = %d C", Parameters::get()->getT1()); 
-  face->println(buff);
-
-  snprintf(buff, 30, " set = %d C", Parameters::get()->mode()->temp()); 
-  face->println(buff);
-
-  face->pushSprite(0, 0, TFT_TRANSPARENT);
+  return this->m_face != nullptr;
 }
 
 //----------------------------------------------------------
 
-void ScreenSetTemp::draw(TFT_eSprite *face) 
+void ScreenMain::draw()
 {
+  if (!Screen::checkFace()) {
+    return;
+  }
+
+  this->m_face->createSprite(240, 135);
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLACK); 
+  this->m_face->setTextSize(2);
+  
   char buff[30];
   
-  face->fillSprite(TFT_BLUE);
-  face->setCursor(3, 3, 2);
+  this->m_face->fillSprite(TFT_GREEN);
+  this->m_face->setCursor(3, 3, 2);
     
-  face->setTextColor(TFT_WHITE,TFT_BLUE); 
-  snprintf(buff, 30, " t1 = %d", Parameters::get()->temp()); 
-  face->println(buff);
-  
-  face->pushSprite(0, 0, TFT_TRANSPARENT);
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLUE); 
+
+  snprintf(buff, 30, " t = %d C", Parameters::get()->getT1()); 
+  this->m_face->println(buff);
+
+  snprintf(buff, 30, " set = %d C", Parameters::get()->mode()->temp()); 
+  this->m_face->println(buff);
+
+  this->m_face->pushSprite(0, 0, TFT_TRANSPARENT);
 }
 
-//-----------------------------------------------------------
+//----------------------------------------------------------
 
-void ScreenSelectMode::draw(TFT_eSprite *face)
+void ScreenSetTemp::draw()
 {
+  if (!Screen::checkFace()) {
+    return;
+  }
+
+  this->m_face->createSprite(240, 135);
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLACK); 
+  this->m_face->setTextSize(2);
+  
   char buff[30];
   
-  face->fillSprite(TFT_RED);
-  face->setCursor(3, 3, 2);
+  this->m_face->fillSprite(TFT_BLUE);
+  this->m_face->setCursor(3, 3, 2);
     
-  face->setTextColor(TFT_WHITE,TFT_RED); 
-  face->println("MODE:");
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLUE); 
+  snprintf(buff, 30, " t1 = %d", Parameters::get()->temp()); 
+  this->m_face->println(buff);
+  
+  this->m_face->pushSprite(0, 0, TFT_TRANSPARENT);}
+//-----------------------------------------------------------
+
+void ScreenSelectMode::draw()
+{
+  if (!Screen::checkFace()) {
+    return;
+  }
+
+  this->m_face->createSprite(240, 135);
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLACK); 
+  this->m_face->setTextSize(2);
+  
+  char buff[30];
+  
+  this->m_face->fillSprite(TFT_RED);
+  this->m_face->setCursor(3, 3, 2);
+    
+  this->m_face->setTextColor(TFT_WHITE,TFT_RED); 
+  this->m_face->println("MODE:");
 
   auto currentMode = Parameters::get()->mode();
   
@@ -56,55 +89,69 @@ void ScreenSelectMode::draw(TFT_eSprite *face)
 
     if (mode == currentMode)
     {
-      face->setTextColor(TFT_RED,TFT_WHITE); 
+      this->m_face->setTextColor(TFT_RED,TFT_WHITE); 
     }
     else
     {
-      face->setTextColor(TFT_WHITE,TFT_RED); 
+      this->m_face->setTextColor(TFT_WHITE,TFT_RED); 
     }
-    face->println(mode->name());
+    this->m_face->println(mode->name());
   }
   
-  face->pushSprite(0, 0, TFT_TRANSPARENT); 
+  this->m_face->pushSprite(0, 0, TFT_TRANSPARENT); 
 }
-
 //----------------------------------------------------
 
-void ScreenDiag1::draw(TFT_eSprite *face) 
+void ScreenDiag1::draw()
 {
+  if (!Screen::checkFace()) {
+    return;
+  }
+
+  this->m_face->createSprite(240, 135);
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLACK); 
+  this->m_face->setTextSize(2);
+  
   char buff[30];
   
-  face->fillSprite(TFT_GREEN);
-  face->setCursor(3, 3, 2);
+  this->m_face->fillSprite(TFT_GREEN);
+  this->m_face->setCursor(3, 3, 2);
     
-  face->setTextColor(TFT_WHITE,TFT_BLUE); 
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLUE); 
 
   snprintf(buff, 30, " t1 = %d", Parameters::get()->getT1()); 
-  face->println(buff);
+  this->m_face->println(buff);
   snprintf(buff, 30, " t1 value = %d", Parameters::get()->getValueT1()); 
-  face->println(buff);
+  this->m_face->println(buff);
   
   snprintf(buff, 30, " t2 = %d", Parameters::get()->getT2()); 
-  face->println(buff);
+  this->m_face->println(buff);
   snprintf(buff, 30, " t2 value = %d", Parameters::get()->getValueT2()); 
-  face->println(buff);
+  this->m_face->println(buff);
 
-  face->pushSprite(0, 0, TFT_TRANSPARENT);
+  this->m_face->pushSprite(0, 0, TFT_TRANSPARENT);
 }
-
 //----------------------------------------------------
 
-void ScreenDiag2::draw(TFT_eSprite *face) 
+void ScreenDiag2::draw()
 {
+  if (!Screen::checkFace()) {
+    return;
+  }
+
+  this->m_face->createSprite(240, 135);
+  this->m_face->setTextColor(TFT_WHITE,TFT_BLACK); 
+  this->m_face->setTextSize(2);
+  
   char buff[30];
   
-  face->fillSprite(TFT_PINK);
-  face->setCursor(3, 3, 2);
+  this->m_face->fillSprite(TFT_PINK);
+  this->m_face->setCursor(3, 3, 2);
     
-  face->setTextColor(TFT_BLACK,TFT_PINK); 
+  this->m_face->setTextColor(TFT_BLACK,TFT_PINK); 
 
   snprintf(buff, 30, " DIAG2", Parameters::get()->getT2()); 
-  face->println(buff);
+  this->m_face->println(buff);
 
-  face->pushSprite(0, 0, TFT_TRANSPARENT);
+  this->m_face->pushSprite(0, 0, TFT_TRANSPARENT);
 }

@@ -24,10 +24,6 @@ void setup() {
   tft.setSwapBytes(true);
   tft.fillScreen(TFT_BLACK);
  
-  face.createSprite(240, 135);
-  face.setTextColor(TFT_WHITE,TFT_BLACK); 
-  face.setTextSize(2);
-
   Parameters::set()->face(&face);
   Controller::run(new StateMainHeat());
 }

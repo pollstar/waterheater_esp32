@@ -81,7 +81,7 @@ void Controller::handleBtUp()
 void Controller::taskRenderScreen(void *pvParameters)
 {
   while (1) {
-    Controller::m_state->getScreen()->draw(Parameters::get()->face());
+    Controller::m_state->getScreen()->draw();
     vTaskDelay(pdMS_TO_TICKS(200));
   }
   vTaskDelete(nullptr);
