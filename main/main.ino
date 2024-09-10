@@ -6,16 +6,7 @@
 #include "screen.h"
 #include "controller.h"
 
-
-int t1Temp, t2Temp;
-int t1Value;
-
-uint32_t current_fill = TFT_GREEN;
-
 TFT_eSPI tft = TFT_eSPI();  
-TFT_eSprite face = TFT_eSprite(&tft);
-
-
 
 void setup() {
   tft.init();
@@ -24,11 +15,9 @@ void setup() {
   tft.setSwapBytes(true);
   tft.fillScreen(TFT_BLACK);
  
-  Parameters::set()->face(&face);
+  Parameters::set()->tft(&tft);
   Controller::run(new StateMainHeat());
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
 }

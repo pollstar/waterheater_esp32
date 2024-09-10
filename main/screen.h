@@ -6,8 +6,8 @@ class Screen {
   public:
     virtual void draw() = 0;
   protected:
-    bool checkFace();
-    TFT_eSprite *m_face {nullptr};
+    bool checkTft();
+    TFT_eSPI *m_tft {nullptr};
 };
 
 class ScreenMain: public Screen
