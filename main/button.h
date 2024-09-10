@@ -21,17 +21,17 @@ public:
 
   inline void registerOnPressedCallback(ButtonCallback cb)
     {
-      onPressedCallback_ = cb;
+      this->onPressedCallback = cb;
       Button::startHandler(this);
     };
   inline void registerOnReleasedCallback(ButtonCallback cb)
     {
-      onReleasedCallback_ = cb;
+      this->onReleasedCallback = cb;
       Button::startHandler(this);
     };
   inline void registerOnTouchCallback(ButtonCallback cb)
     {
-      onTouchCallback_ = cb;
+      this->onTouchCallback = cb;
       Button::startHandler(this);
     };
   inline void registerOnLongTouchCallback(ButtonCallback cb)
@@ -41,28 +41,27 @@ public:
     };
 
   inline void removeOnPressedCallback()
-    {onPressedCallback_ = nullptr;};
+    {this->onPressedCallback = nullptr;};
   inline void removeOnReleasedCallback()
-    {onReleasedCallback_ = nullptr;};
+    {this->onReleasedCallback = nullptr;};
   inline void removeOnTouchCallback()
-    {onTouchCallback_ = nullptr;};
+    {this->onTouchCallback = nullptr;};
   inline void removeOnLongTouchCallback()
     {onLongTouchCallback_ = nullptr;};
 
   enum State{RELASE, PRESSED, LONG_PRESSED};
   
 private:
-    uint8_t pin_;
-    State state_;
-    uint8_t currentState_ = HIGH;
+    uint8_t m_pin;
+    uint8_t m_currentState = HIGH;
 
-    ButtonCallback onPressedCallback_ = nullptr;
-    ButtonCallback onReleasedCallback_ = nullptr;
-    ButtonCallback onTouchCallback_ = nullptr;
+    ButtonCallback onPressedCallback = nullptr;
+    ButtonCallback onReleasedCallback = nullptr;
+    ButtonCallback onTouchCallback = nullptr;
     ButtonCallback onLongTouchCallback_ = nullptr;
   
     int16_t timePressDuration_ = 0;
-    int16_t timePressedDuration_ = 0;
+    int16_t timePressedDuration = 0;
     int16_t timeReleaseDuration = 0;
     int16_t timeLongPressDuration = 0;
   
