@@ -4,15 +4,18 @@
 
 class Screen {
   public:
+    Screen();
+    ~Screen();
+
     virtual void draw() = 0;
   protected:
-    bool checkTft();
-    TFT_eSPI *m_tft {nullptr};
+    TFT_eSprite *m_face {nullptr};
 };
 
 class ScreenMain: public Screen
 {
   public:
+    // ScreenMain() : Screen() {};
     void draw() override;
 };
 
