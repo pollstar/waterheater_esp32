@@ -1,11 +1,9 @@
+#include "main.h"
 #include "controller.h"
 #include "parameters.h"
 
-#define TERMISTOR_ON      25
-
 void Controller::run(State *state)
 {
-  pinMode(TERMISTOR_ON, OUTPUT);
   Controller::setState(state);
 
   if (!Controller::m_taskReadTemp) {

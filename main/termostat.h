@@ -2,16 +2,18 @@
 
 #include <Arduino.h>
 #include <vector>
-#include <memory>
 
 #include "heater.h"
 #include "termistor.h"
+#include "filter.h"
 
 class Termostat {
 public:
   Termostat(Termistor* t1, Termistor* t2, Heater* h1, Heater* h2);
   void start(void);
   void stop(void);
+
+  int getTemp (void);
 
 private:
   Termostat(const Termostat&) = delete;
@@ -33,6 +35,11 @@ private:
 
   bool termostatFirstOn = false;
   bool termostatSecondOn = false;
+
+  WindowFilter filter_t1 {5};
+  WindowFilter filter_t2 {5};
+
+  int t_current = 0;
 };
 
 extern Termostat termostat;

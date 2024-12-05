@@ -33,8 +33,6 @@ class Controller
     static void taskRenderScreen(void *pvParameters);
     static void taskReadTermistor(void *pvParameters);
 
-    static Termostat* m_termostat; 
-
     static State *m_state;
     static TaskHandle_t m_taskHandle;
     static TaskHandle_t m_taskReadTemp;

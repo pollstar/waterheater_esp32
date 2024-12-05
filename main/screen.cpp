@@ -38,7 +38,7 @@ void ScreenMain::draw()
 
   char buff[30];
       
-  snprintf(buff, 30, "%d", Parameters::get()->getT1());
+  snprintf(buff, 30, "%d", termostat.getTemp());
   m_face.setTextSize(2); 
   int16_t w = m_face.textWidth(buff, 7);
   int16_t h = m_face.fontHeight(7);

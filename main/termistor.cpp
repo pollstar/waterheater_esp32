@@ -17,13 +17,14 @@ Termistor::Termistor(uint8_t pin) :
   m_pin(pin)
 {
   pinMode(m_pin, INPUT);
+  pinMode(TERMISTOR_ON, OUTPUT);
+
 //  adcAttachPin(m_pin);
 //  analogSetPinAttenuation(m_pin, ADC_0db);
 }
 
 int Termistor::getValue()
 {
-  // Serial.printf("Read pin %d\n", m_pin);
   return analogRead(m_pin) + ERROR_VALUE_TEMP;
 }
 

@@ -3,9 +3,19 @@
 #include "esp32-hal-gpio.h"
 #include "termostat.h"
 #include "parameters.h"
+#include "controller.h"
+
+
+#if !defined(TERMOSTAT_TICK_PERIOD)
+#define TERMOSTAT_TICK_PERIOD 1000
+#endif
+
+#if !defined(TERMOSTAT_TASK_STACK_SIZE)
+#define TERMOSTAT_TASK_STACK_SIZE 2048
+#endif
 
 #if !defined(TERMOSTAT_TASK_PRIORITY)
-#define TERMOSTAT_TASK_PRIORITY   5
+#define TERMOSTAT_TASK_PRIORITY 5
 #endif
 
 class Controller;
@@ -14,7 +24,8 @@ Termostat::Termostat(Termistor* t1, Termistor* t2, Heater* h1, Heater* h2)
   : m_t1(t1), m_t2(t2), m_heater1(h1), m_heater2(h2) {
 
   if (Termostat::m_taskHandle == nullptr) {
-    xTaskCreate(Termostat::taskTermostat, "5", 2048, nullptr, TERMOSTAT_TASK_PRIORITY, &Termostat::m_taskHandle);
+    xTaskCreate(Termostat::taskTermostat, "TaskTermostat", TERMOSTAT_TASK_STACK_SIZE,
+                nullptr, TERMOSTAT_TASK_PRIORITY, &Termostat::m_taskHandle);
   }
 
   Termostat::termostats.push_back(this);
@@ -41,28 +52,41 @@ void Termostat::off() {
   Controller::ledHeat.off();
 }
 
+int Termostat::getTemp(void) {
+  return this->t_current;
+}
+
 void Termostat::taskTermostat(void* pvParameters) {
 
   while (1) {
     for (auto termostat : Termostat::termostats) {
-      int t1 = termostat->m_t1->getTemp();
-      int t2 = termostat->m_t2->getTemp();
+      Controller::ledLock.on();
+      digitalWrite(TERMISTOR_ON, HIGH);
+      vTaskDelay(pdMS_TO_TICKS(100));
 
-      if (t1 > 0 && t2 > 0) {
-        int t = Parameters::get()->temp();
-        int diff = Parameters::get()->diff();
+      termostat->filter_t1.add(termostat->m_t1->getTemp());
+      termostat->filter_t2.add(termostat->m_t2->getTemp());
 
-        if (t1 < t - diff && !termostat->termostatFirstOn) {
-          termostat->termostatFirstOn = true;
-          termostat->on();
-        } else if (t1 >= t + diff && termostat->termostatFirstOn) {
-          termostat->termostatFirstOn = false;
-          termostat->off();
-        }
+      digitalWrite(TERMISTOR_ON, LOW);
+
+      int t1 = termostat->filter_t1.getFilteredValue();
+      int t2 = termostat->filter_t2.getFilteredValue();
+
+      termostat->t_current = t1 <= 0 ? (t2 <= 0 ? 0 : t2) : (t2 <= 0 ? t1 : (t1 + t2 / 2));
+
+      int t = Parameters::get()->temp();
+      int diff = Parameters::get()->diff();
+
+      if (termostat->t_current < t - diff && !termostat->termostatFirstOn) {
+        termostat->termostatFirstOn = true;
+        termostat->on();
+      } else if (termostat->t_current >= t + diff && termostat->termostatFirstOn) {
+        termostat->termostatFirstOn = false;
+        termostat->off();
       }
     }
 
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(TERMOSTAT_TICK_PERIOD));
   }
 
   vTaskDelete(nullptr);

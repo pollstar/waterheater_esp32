@@ -2,8 +2,14 @@
 #include "button.h"
 #include "main.h"
 
+#if !defined(BUTTON_TASK_PRIORITY)
 #define BUTTON_TICK_PERIOD 10
+#endif
+
+#if !defined(BUTTON_TASK_PRIORITY)
 #define BUTTON_TASK_STACK_SIZE 2048
+#endif
+
 #if !defined(BUTTON_TASK_PRIORITY)
 #define BUTTON_TASK_PRIORITY   5
 #endif
