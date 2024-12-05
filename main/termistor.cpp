@@ -11,7 +11,7 @@ std::vector<std::pair<int, int>> convertTable = {
     {3595,100}
 };
 
-#define ERROR_VALUE_TEMP 0
+#define ERROR_VALUE_TEMP -4
 
 Termistor::Termistor(uint8_t pin) :
   m_pin(pin)
@@ -25,7 +25,7 @@ Termistor::Termistor(uint8_t pin) :
 
 int Termistor::getValue()
 {
-  return analogRead(m_pin) + ERROR_VALUE_TEMP;
+  return analogRead(m_pin);
 }
 
 int Termistor::getValue(int v)
@@ -50,7 +50,7 @@ float Termistor::getTemp()
       float v2 = convertTable[i+1].first;
       float t1 = convertTable[i].second;
       float t2 = convertTable[i+1].second;
-      return (float)(t1+(value-v1)*(t2-t1)/(v2-v1));
+      return (float)((t1+(value-v1)*(t2-t1)/(v2-v1)) + ERROR_VALUE_TEMP);
     }
   }
 }
