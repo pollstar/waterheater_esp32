@@ -45,7 +45,7 @@ void ScreenMain::draw()
 
   m_face.drawString (buff, (180-w)/2, (110-h)/2, 7);
 
-  m_face.pushSprite(20, 0);
+  m_face.pushSprite(30, 0);
 }
 
 //----------------------------------------------------------
@@ -76,7 +76,7 @@ void ScreenSetTemp::draw()
   int16_t h = m_face.fontHeight(2);
   m_face.drawString (buff, (180-w)/2, 109-h, 2);
 
-  m_face.pushSprite(20, 0);
+  m_face.pushSprite(30, 0);
 }
 //-----------------------------------------------------------
 
@@ -107,7 +107,7 @@ void ScreenSelectMode::draw()
   int16_t h = m_face.fontHeight(font);
   m_face.drawString (buff, (180-w)/2, 73, font);
 
-  m_face.pushSprite(20, 0);
+  m_face.pushSprite(30, 0);
   
 }
 //----------------------------------------------------
@@ -139,7 +139,7 @@ void ScreenDiag1::draw()
   snprintf(buff, 30, " v2 = %d", Parameters::get()->getValueT2()); 
   m_face.println(buff);
     
-  m_face.pushSprite(20, 0);
+  m_face.pushSprite(30, 0);
   }
 //----------------------------------------------------
 
@@ -170,5 +170,11 @@ void ScreenDiag2::draw()
   snprintf(buff, 30, " v2 = %d", Parameters::get()->getValueT2()); 
   m_face.println(buff);
     
-  m_face.pushSprite(20, 0);
+  m_face.pushSprite(30, 0);
 }
+
+ScreenMain screenMain;
+ScreenSetTemp screenSetTemp;
+ScreenSelectMode screenSelectMode;
+ScreenDiag1 screenDiag1;
+ScreenDiag2 screenDiag2;

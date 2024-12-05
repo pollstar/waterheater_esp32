@@ -1,3 +1,4 @@
+#include "main.h"
 #include "termistor.h"
 #include <vector>
 
@@ -52,3 +53,6 @@ float Termistor::getTemp()
     }
   }
 }
+
+Termistor t1(TERMISTOR1_PIN);
+Termistor t2(TERMISTOR2_PIN);

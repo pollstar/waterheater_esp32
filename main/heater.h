@@ -1,24 +1,17 @@
 #pragma once
 
-#include <Arduino.h>
+#include "main.h"
 
-class Heater
-{
-  public:
-    ~Heater();
-    static Heater* getHeater();
+class Heater {
+public:
+  Heater(uint8_t pin);
 
-    void on();
-    void halfOn();
-    void off();
-
-
-  private:
-    Heater();
-    Heater(const Heater&) = delete;
-    Heater & operator =(const Heater &) = delete;
-
-    static void taskHeater(void *pvParameters);
-
-    static TaskHandle_t m_taskHandle;
+  void on(void);
+  void off(void);
+  
+private:
+  uint8_t m_pin;
 };
+
+extern Heater heater1;
+extern Heater heater2;

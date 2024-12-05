@@ -42,3 +42,9 @@ class ScreenDiag2: public Screen
   public:
     void draw() override;
 };
+
+extern ScreenMain screenMain;
+extern ScreenSetTemp screenSetTemp;
+extern ScreenSelectMode screenSelectMode;
+extern ScreenDiag1 screenDiag1;
+extern ScreenDiag2 screenDiag2;

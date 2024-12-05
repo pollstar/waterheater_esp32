@@ -30,11 +30,11 @@ class StateMainHeat : public State
     void handleBtUp() override;
 };
 
-class Statetemp : public State
+class StateTemp : public State
 {
   public:
-    Statetemp();
-    ~Statetemp() override;
+    StateTemp();
+    ~StateTemp() override;
 
     void handleBtDown() override;
     void handleBtOkMenu() override;
@@ -66,3 +66,8 @@ class StateDiagMode : public State
     uint8_t m_currentScreen = 0;
 
 };
+
+extern StateMainHeat stateMainHeat;
+extern StateTemp stateTemp;
+extern StateSelectMode stateSelectMode;
+extern StateDiagMode stateDiagMode;

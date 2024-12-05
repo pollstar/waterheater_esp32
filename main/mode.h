@@ -1,6 +1,7 @@
 #pragma once
 
 #include "led.h"
+#include "controller.h"
 
 constexpr int m_minTemp = 20;
 constexpr int m_maxTemp = 80;
@@ -69,3 +70,7 @@ class ModeEco : public Mode
       m_temp = 50;
     };
 };
+
+extern ModeNormal modeNormal;
+extern ModeCold modeCold;
+extern ModeEco modeEco;

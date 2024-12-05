@@ -1,9 +1,12 @@
 #include "esp32-hal-gpio.h"
 #include "button.h"
+#include "main.h"
 
 #define BUTTON_TICK_PERIOD 10
 #define BUTTON_TASK_STACK_SIZE 2048
+#if !defined(BUTTON_TASK_PRIORITY)
 #define BUTTON_TASK_PRIORITY   5
+#endif
 
 Button::Button(uint8_t pin): m_pin(pin) {
 	pinMode(this->m_pin, INPUT);
@@ -81,7 +84,7 @@ void Button::taskHandler(void *pvParameters) {
       }
     }
 
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(BUTTON_TICK_PERIOD));
   }
 
   vTaskDelete(nullptr);

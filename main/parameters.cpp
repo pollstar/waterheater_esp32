@@ -1,7 +1,7 @@
 #include "parameters.h"
 #include <EEPROM.h>
 
-std::array<Mode*, INDEX_MODE_MAX> modes = {new ModeCold(), new ModeEco(), new ModeNormal()};
+std::array<Mode*, INDEX_MODE_MAX> modes = {&modeCold, &modeEco, &modeNormal};
 //Parameters Parameters::m_instance;
 
 Parameters::Parameters() {

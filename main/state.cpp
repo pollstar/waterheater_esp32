@@ -1,6 +1,7 @@
 #include "state.h"
 #include "controller.h"
 #include "parameters.h"
+#include "screen.h"
 
 #define FILL_BTN_DOWN_PRESS     TFT_WHITE 
 #define FILL_BTN_OK_MENU_PRESS  TFT_PINK
@@ -18,7 +19,7 @@ State::~State()
 
 StateMainHeat::StateMainHeat()
 {
-  m_screen = new ScreenMain();
+  m_screen = &screenMain;
   // Controller::ledHeat.on();
 }
 
@@ -28,48 +29,48 @@ StateMainHeat::~StateMainHeat()
 
 void StateMainHeat::handleBtDown()
 {
-  Controller::setState(new Statetemp());
+  Controller::setState(&stateTemp);
 }
 
 void StateMainHeat::handleBtOkMenu()
 {
-  Controller::setState(new StateSelectMode());
+  Controller::setState(&stateSelectMode);
 }
 
 void StateMainHeat::handleBtUp()
 {
-  Controller::setState(new Statetemp());
+  Controller::setState(&stateTemp);
 }
 
 //--------------------------------------------------
-Statetemp::Statetemp()
+StateTemp::StateTemp()
 {
-  m_screen = new ScreenSetTemp();
+  m_screen = &screenSetTemp;
 }
 
-Statetemp::~Statetemp()
+StateTemp::~StateTemp()
 {
   // Controller::ledHeat.off();
 }
 
-void Statetemp::handleBtDown()
+void StateTemp::handleBtDown()
 {
   Parameters::set()->temp(Parameters::get()->temp() - 1);
 }
 
-void Statetemp::handleBtOkMenu()
+void StateTemp::handleBtOkMenu()
 {
-  Controller::setState(new StateMainHeat());
+  Controller::setState(&stateMainHeat);
 }
 
-void Statetemp::handleBtUp()
+void StateTemp::handleBtUp()
 {
   Parameters::set()->temp(Parameters::get()->temp() + 1);
 }
 //------------------------------------------------------
 StateSelectMode::StateSelectMode()
 {
-  m_screen = new ScreenSelectMode();
+  m_screen = &screenSelectMode;
 }
 
 StateSelectMode::~StateSelectMode()
@@ -92,7 +93,7 @@ void StateSelectMode::handleBtDown()
 
 void StateSelectMode::handleBtOkMenu()
 {
-  Controller::setState(new StateDiagMode());
+  Controller::setState(&stateDiagMode);
 }
 
 void StateSelectMode::handleBtUp()
@@ -127,7 +128,7 @@ void StateDiagMode::handleBtDown()
 
 void StateDiagMode::handleBtOkMenu()
 {
-  Controller::setState(new StateMainHeat());
+  Controller::setState(&stateMainHeat);
 }
 
 void StateDiagMode::handleBtUp()
@@ -136,6 +137,10 @@ void StateDiagMode::handleBtUp()
   m_screen = StateDiagMode::m_screens[m_currentScreen%2];
 }
 
-std::array<Screen*, 2> StateDiagMode::m_screens = {new ScreenDiag1(), new ScreenDiag2()};
+std::array<Screen*, 2> StateDiagMode::m_screens =  {&screenDiag1, &screenDiag2};
 
+StateMainHeat stateMainHeat;
+StateSelectMode stateSelectMode;
+StateDiagMode stateDiagMode;
+StateTemp stateTemp;
 
